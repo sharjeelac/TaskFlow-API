@@ -16,6 +16,11 @@ app.use(cors({
     allowedHeaders : ["Authorization", "Content-Type"]
 }))
 
+
+// Import Routes
+import healtCheckRouter from './routes/healthcheck.routes.js'
+app.use('/api/v1/healthcheck', healtCheckRouter)
+
 app.get('/', (req, res)=>{
     res.send("Welcome to TaskFlow")
 })
