@@ -22,7 +22,7 @@ app.use(
 import healtCheckRouter from "./routes/healthcheck.routes.js";
 import authRouter from "./routes/auth.routes.js";
 app.use("/api/v1/healthcheck", healtCheckRouter);
-app.use("/api/v1", authRouter);
+app.use("/api/v1/auth", authRouter);
 
 app.get("/", (req, res) => {
   res.send("Welcome to TaskFlow");
