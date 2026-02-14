@@ -1,10 +1,48 @@
 import Mailgen from "mailgen";
+import nodemailer from "nodemailer";
+
+const sendEmail = async (options) => {
+  const mailGenerator = new Mailgen({
+    theme: "default",
+    product: {
+      name: "Taskflow",
+      link: "https:taskflow.com",
+    },
+  });
+
+  const emaiText = mailGenerator.generatePlaintext(options.mailgenContent);
+  const emailHtml = mailGenerator.generate(options.mailgenContent);
+
+  const transport = nodemailer.createTransport({
+    host: process.env.MAILTRAP_SMTP_HOST,
+    port: process.env.MAILTRAP_SMTP_PORT,
+    auth: {
+      user: process.env.MAILTRAP_SMTP_USER,
+      pass: process.env.MAILTRAP_SMTP_PASS,
+    },
+  });
+
+  const mail = {
+    from: "no-reply@taskflow.com",
+    to: options.email,
+    subject: options.subject,
+    text: emaiText,
+    html: emailHtml,
+  };
+
+  try {
+    await transport.sendMail(mail);
+  } catch (error) {
+    console.error("email serves failed", error);
+    throw error
+  }
+};
 
 const emailVerificationContent = (username, verificationUrl) => {
   return {
     body: {
       name: username,
-      intro: "welcome to our App! we'are excited to have you on board",
+      intro: "welcome to our App! we'ar excited to have you on board",
       action: {
         instructions:
           "To verify your email please click on the following button",
@@ -24,7 +62,7 @@ const resetPasswordContent = (username, resetPasswordUrl) => {
   return {
     body: {
       name: username,
-      intro: "We got the request to rest the password of your account",
+      intro: "We got the request to reset the password of your account",
       action: {
         instructions:
           "To reset your password please click on the following button",
@@ -40,4 +78,4 @@ const resetPasswordContent = (username, resetPasswordUrl) => {
   };
 };
 
-export { resetPasswordContent, emailVerificationContent };
+export { resetPasswordContent, emailVerificationContent, sendEmail };
