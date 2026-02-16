@@ -13,7 +13,7 @@ const generateAccessAndRefreshToken = async (userId) => {
     user.refreshToken = refreshToken;
 
     await user.save({ validateBeforeSave: false });
-    return {accessToken, refreshToken}
+    return { accessToken, refreshToken };
   } catch (error) {
     throw new ApiError(
       500,
@@ -74,7 +74,7 @@ const registerUser = asyncHandler(async (req, res) => {
     );
 });
 
-const login = asyncHandler(async (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     throw new ApiError(401, "Email and Password are required");
@@ -89,7 +89,9 @@ const login = asyncHandler(async (req, res) => {
     throw new ApiError(402, "Invalid Credentials");
   }
 
-  const { refreshToken, accessToken } = await generateAccessAndRefreshToken(user._id);
+  const { refreshToken, accessToken } = await generateAccessAndRefreshToken(
+    user._id,
+  );
 
   const loggedInUser = await User.findById(user._id).select(
     "-password  -forgotPasswordToken -forgotPasswordExpiry -emailVerificationToken -emailVerificationExpiry",
@@ -117,4 +119,27 @@ const login = asyncHandler(async (req, res) => {
     );
 });
 
-export { registerUser, login };
+const logoutUser = asyncHandler(async (req, res) => {
+  await User.findOneAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        refreshToken: "",
+      },
+    },
+    {
+      new: true,
+    },
+  );
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+  res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User logout"));
+});
+
+export { registerUser, loginUser , logoutUser};
