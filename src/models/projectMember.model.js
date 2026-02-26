@@ -22,6 +22,13 @@ const projectMemberSchema = new Schema(
   { timestamps: true },
 );
 
+// Ensures a user can only have ONE role per project
+projectMemberSchema.index({ user: 1, project: 1 }, { unique: true });
+
+// Speeds up the exact query we wrote earlier
+projectMemberSchema.index({ user: 1 });
+projectMemberSchema.index({ project: 1 });
+
 export const ProjectMember = mongoose.model(
   "ProjectMember",
   projectMemberSchema,
