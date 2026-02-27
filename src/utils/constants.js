@@ -4,7 +4,8 @@ export const UserRolesEnums = {
   MEMBER: "member",
 };
 
-export const AvailableUserRoles = Object.values(userRolesEnums);
+// AvailableUserRoles should derive from the defined UserRolesEnums
+export const AvailableUserRoles = Object.values(UserRolesEnums);
 
 export const TaskStatusEnums = {
   TODO: "todo",

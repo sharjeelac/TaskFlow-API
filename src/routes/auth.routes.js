@@ -9,6 +9,7 @@ import {
   resetForgotPassword,
   getCurrentUser,
   resendEmailVerification,
+  changeCurrentPassword,
 } from "../controllers/auth.controller.js";
 import {
   userRegisterValidator,
@@ -40,10 +41,10 @@ router.route("/current-user").get(verifyJwt, getCurrentUser);
 router
   .route("/change-password")
   .post(
+    verifyJwt,
     userCurrentPasswordChangeValidator(),
     validate,
-    verifyJwt,
-    getCurrentUser,
+    changeCurrentPassword,
   );
 router
   .route("/resend-email-verification")

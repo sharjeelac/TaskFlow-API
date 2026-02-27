@@ -1,4 +1,5 @@
 import { body } from "express-validator";
+import { AvailableUserRoles } from "../utils/constants.js";
 
 const userRegisterValidator = () => {
   return [
@@ -10,12 +11,12 @@ const userRegisterValidator = () => {
       .withMessage("email is invalid"),
     body("username")
       .trim()
-      .isEmpty()
+      .notEmpty()
       .withMessage("username is required")
       .isLowercase()
-      .isLength(3)
+      .isLength({ min: 3 })
       .withMessage("username must be at least 3 character"),
-    body("pasaword").trim().notEmpty().withMessage("password is required"),
+    body("password").trim().notEmpty().withMessage("password is required"),
     body("fullName").optional().trim(),
   ];
 };
@@ -52,10 +53,35 @@ const userResetForgotPasswordValidator = () => {
   return [body("newPassword").notEmpty().withMessage("Password is required")];
 };
 
+const createProjectValidator = () => {
+  return [
+    body("name").notEmpty().withMessage("Name is required"),
+    body("description").optional(),
+  ];
+};
+
+const addMemberToProjectValidator = () => {
+  return [
+    body("email")
+      .trim()
+      .notEmpty()
+      .withMessage("Email is Required")
+      .isEmail()
+      .withMessage("Email is Invalid"),
+    body("role")
+      .notEmpty()
+      .withMessage("Role is Required")
+      .isIn(AvailableUserRoles)
+      .withMessage("Role is Invalid "),
+  ];
+};
+
 export {
   userRegisterValidator,
   userLoginValidator,
   userCurrentPasswordChangeValidator,
   forgotPasswordValidator,
   userResetForgotPasswordValidator,
+  createProjectValidator,
+  addMemberToProjectValidator
 };
