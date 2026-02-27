@@ -351,11 +351,11 @@ This project is licensed under the ISC License - see the LICENSE file for detail
 
 ## 👥 Authors
 
-- **Your Name** - Initial work
+- **Sharjeel Khalid** - Initial work
 
 ## 📞 Support
 
-For support, email support@taskflow.com or open an issue on GitHub.
+For support, email sharjeel.khalid.se@gmail.com or open an issue on GitHub.
 
 ## 🙏 Acknowledgments
 
